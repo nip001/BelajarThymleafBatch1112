@@ -3,17 +3,27 @@ package com.juaracoding.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.juaracoding.model.ContentModel;
 import com.juaracoding.model.JudulModel;
 import com.juaracoding.model.TestiModel;
 import com.juaracoding.model.UserModel;
+import com.juaracoding.repository.UserRepository;
 
 @Controller
 public class WebController {
+	
+	@Autowired
+	UserRepository userRepository;
 
 	JudulModel judul = new JudulModel("Juara","Mantap");
 	
@@ -61,14 +71,25 @@ public class WebController {
 	}
 	
 	@GetMapping("/blog")
-	private String blog(Model model) {
-		List<UserModel> listUser  = new ArrayList<UserModel>();
-		listUser.add(new UserModel("Kevin", "/img/tessy1.jpg","Review banci bintang 1","seorang tessy wahyuni riwayati mendapatkan bintang 1 dari penggemarnya","2020-11-17"));
-		listUser.add(new UserModel("Bintang", "/img/tarno.jpg","Review pesulap bintang 1","seorang Sutarno mendapatkan bintang 1 dari penggemarnya","2021-11-17"));
-		listUser.add(new UserModel("Dini", "/img/taylor.png","Review penjahit bintang 1","seorang penjahit mendapatkan bintang 1 dari penggemarnya","2019-11-17"));
-		listUser.add(new UserModel("Adrian", "/img/komeng.jpg","Review pejabat bintang 1","seorang pejabat mendapatkan bintang 1 dari penggemarnya","2030-11-17"));
+	private String blog(Model model, @RequestParam(value = "huruf",defaultValue = "")String huruf
+			,@RequestParam(value="tanggal",defaultValue = "")String tangggal) {
+		model.addAttribute("listUser", userRepository.findByTanggalContainingAndNamaContaining(tangggal, huruf));
+		
+//		if(huruf.equalsIgnoreCase("")) {
+//			model.addAttribute("listUser", userRepository.findAll());
+//		}else {
+//			model.addAttribute("listUser", userRepository.getUserByName(huruf));
+//		}
 		model.addAttribute("judulModel", judul);
-		model.addAttribute("listUser", listUser);
+		return "blog";
+	}
+	
+
+	
+	@GetMapping("/blog/{huruf}")
+	private String blogg(Model model, @PathVariable("huruf") String huruf) {
+		model.addAttribute("listUser", userRepository.getUserByName(huruf));
+		model.addAttribute("judulModel", judul);
 		return "blog";
 	}
 	
@@ -77,4 +98,19 @@ public class WebController {
 		model.addAttribute("judulModel", judul);
 		return "contact";
 	}
+	
+	
+	@GetMapping("/blog/input")
+	private String inputBlog(Model model) {
+		model.addAttribute("userModel", new UserModel());
+		return "input";
+	}
+	
+	
+	@PostMapping("/blog/input")
+	private String saveBlog(@ModelAttribute UserModel data) {
+		userRepository.save(data);
+		return "redirect:/blog";
+	}
+	
 }
