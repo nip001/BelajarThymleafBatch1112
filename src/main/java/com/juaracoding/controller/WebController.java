@@ -10,16 +10,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.juaracoding.model.ContentModel;
 import com.juaracoding.model.JudulModel;
 import com.juaracoding.model.TestiModel;
+import com.juaracoding.model.UserModel;
 
 @Controller
 public class WebController {
 
 	JudulModel judul = new JudulModel("Juara","Mantap");
-	List<ContentModel> listContent = new ArrayList<ContentModel>();
 	
 	@GetMapping("/")
 	private String index(Model model) {
 
+		List<ContentModel> listContent = new ArrayList<ContentModel>();
 		//Ini adalah pelajaran array
 		ContentModel model1 = new ContentModel("Judul ini asik", "keasikan judul ini adalah judul asik");
 		listContent.add(model1);
@@ -61,7 +62,13 @@ public class WebController {
 	
 	@GetMapping("/blog")
 	private String blog(Model model) {
+		List<UserModel> listUser  = new ArrayList<UserModel>();
+		listUser.add(new UserModel("Kevin", "/img/tessy1.jpg","Review banci bintang 1","seorang tessy wahyuni riwayati mendapatkan bintang 1 dari penggemarnya","2020-11-17"));
+		listUser.add(new UserModel("Bintang", "/img/tarno.jpg","Review pesulap bintang 1","seorang Sutarno mendapatkan bintang 1 dari penggemarnya","2021-11-17"));
+		listUser.add(new UserModel("Dini", "/img/taylor.png","Review penjahit bintang 1","seorang penjahit mendapatkan bintang 1 dari penggemarnya","2019-11-17"));
+		listUser.add(new UserModel("Adrian", "/img/komeng.jpg","Review pejabat bintang 1","seorang pejabat mendapatkan bintang 1 dari penggemarnya","2030-11-17"));
 		model.addAttribute("judulModel", judul);
+		model.addAttribute("listUser", listUser);
 		return "blog";
 	}
 	
