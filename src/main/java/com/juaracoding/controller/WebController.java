@@ -17,6 +17,7 @@ import com.juaracoding.model.ContentModel;
 import com.juaracoding.model.JudulModel;
 import com.juaracoding.model.TestiModel;
 import com.juaracoding.model.UserModel;
+import com.juaracoding.repository.ComfortRepository;
 import com.juaracoding.repository.UserRepository;
 
 @Controller
@@ -24,6 +25,9 @@ public class WebController {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	ComfortRepository comfortRepository;
 
 	JudulModel judul = new JudulModel("Juara","Mantap");
 	
@@ -66,6 +70,7 @@ public class WebController {
 	
 	@GetMapping("/services")
 	private String services(Model model) {
+		model.addAttribute("listComfort", comfortRepository.findAll());
 		model.addAttribute("judulModel", judul);
 		return "services";
 	}
@@ -76,7 +81,7 @@ public class WebController {
 		model.addAttribute("listUser", userRepository.findByTanggalContainingAndNamaContaining(tangggal, huruf));
 		
 //		if(huruf.equalsIgnoreCase("")) {
-//			model.addAttribute("listUser", userRepository.findAll());
+			model.addAttribute("listUser", userRepository.findAll());
 //		}else {
 //			model.addAttribute("listUser", userRepository.getUserByName(huruf));
 //		}
