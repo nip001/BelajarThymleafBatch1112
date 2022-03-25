@@ -8,7 +8,8 @@
 </head>
 <body class="container">
 	<h1>input comfort</h1>
-	<form method="post" th:action="@{/services/input}" th:object="${objekBaruComfortModel}">
+	<form method="post" th:action="@{/services/input}" th:object="${objekBaruComfortModel}"
+	enctype="multipart/form-data">
 		<div class="mb-3">
 			<label for="title" class="form-label">Title</label> 
 			<input type="text" class="form-control"
@@ -18,6 +19,11 @@
 			<label for="deskripsi" class="form-label">Deskripsi</label> 
 			<input type="text" class="form-control"
 				id="deskripsi"  th:field="*{deskripsi}">
+		</div>
+		<div class="mb-3">
+			<label for="images" class="form-label">Images</label> 
+			<input type="file" class="form-control"
+				id="deskripsi"  th:name="file">
 		</div>
 		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
